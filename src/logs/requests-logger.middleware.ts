@@ -26,20 +26,29 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
     }
 
     try {
-      const { ip, method, path: url } = request;
+      const { ip, method, path: url, params, query } = request;
       const userAgent = request.get('user-agent') || '';
+
+      RequestsLoggerMiddleware.logsService.info(
+          `Request ${method} ${url}`,
+          {
+            userAgent,
+            ip,
+            params,
+            query,
+            body: response.req.body,
+          }
+        );
   
       response.on('finish', () => {
         const { statusCode } = response;
         const contentLength = response.get('content-length');
   
         RequestsLoggerMiddleware.logsService.info(
-          `Request ${method} ${url}`,
+          `Response to ${method} ${url}`,
           {
               statusCode,
               contentLength,
-              userAgent,
-              ip,
           }
         );
       });
