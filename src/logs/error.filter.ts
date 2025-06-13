@@ -32,10 +32,14 @@ export class ErrorFilter implements ExceptionFilter {
         });
     }
 
+    const errorMessage = typeof(exception?.getResponse()) == 'object' && (exception?.getResponse() as any)?.message
+      ? (exception?.getResponse() as any)?.message
+      : exception.message
+
     response
       .status(status)
       .json({
-        message: status < 500 ? exception.message : undefined,
+        message: errorMessage,
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: request.url,
