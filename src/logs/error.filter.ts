@@ -32,9 +32,12 @@ export class ErrorFilter implements ExceptionFilter {
         });
     }
 
-    const errorMessage = typeof(exception?.getResponse()) == 'object' && (exception?.getResponse() as any)?.message
-      ? (exception?.getResponse() as any)?.message
-      : exception.message
+    const errorMessage = 
+      exception?.getResponse && 
+      typeof(exception?.getResponse()) == 'object' && 
+      (exception?.getResponse() as any)?.message
+        ? (exception?.getResponse() as any)?.message
+        : exception.message
 
     response
       .status(status)
