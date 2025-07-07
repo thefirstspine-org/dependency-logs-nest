@@ -1,6 +1,6 @@
 {
   "name": "@thefirstspine/logs-nest",
-  "version": "11.0.0",
+  "version": "11.1.0",
   "description": "Built on top of @thefirstspine/logs. Provides Nest services.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

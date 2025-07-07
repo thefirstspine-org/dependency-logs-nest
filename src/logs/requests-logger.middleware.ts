@@ -18,11 +18,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
 
   public static use(request: Request, response: Response, next: NextFunction) {
     if (RequestsLoggerMiddleware.logsService == undefined) {
-      RequestsLoggerMiddleware.logsService = new TFSLogsService({
-        console: true,
-        loggly: (process.env.LOGS_LOGGLY_SERVICE != undefined && process.env.LOGS_LOGGLY_TOKEN != undefined),
-        datadog: (process.env.LOGS_DD_API_KEY != undefined),
-      });
+      RequestsLoggerMiddleware.logsService = new TFSLogsService();
     }
 
     try {
