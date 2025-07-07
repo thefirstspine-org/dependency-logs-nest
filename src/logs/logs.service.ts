@@ -14,9 +14,10 @@ export class LogsService {
 
   constructor() {
     this.tfsLogsService = new TFSLogsService({
-      console: true,
+      console: !(process.env.LOGS_BETTERSTACK != undefined), // remove for Better Stack
       loggly: (process.env.LOGS_LOGGLY_SERVICE != undefined && process.env.LOGS_LOGGLY_TOKEN != undefined),
       datadog: (process.env.LOGS_DD_API_KEY != undefined),
+      betterStack: (process.env.LOGS_BETTERSTACK != undefined),
     });
   }
 
