@@ -15,6 +15,10 @@ export class LogsService {
   constructor() {
     this.tfsLogsService = new TFSLogsService();
   }
+  
+  http(message: string, data?: any): void {
+    this.tfsLogsService.http(message, data);
+  }
 
   /**
    * Log an information message. An information is has only a purpose for debugging.
