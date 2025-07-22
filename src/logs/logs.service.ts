@@ -16,8 +16,8 @@ export class LogsService {
     this.tfsLogsService = new TFSLogsService();
   }
   
-  http(message: string, data?: any): void {
-    this.tfsLogsService.http(message, data);
+  debug(message: string, data?: any): void {
+    this.tfsLogsService.debug(message, data);
   }
 
   /**
