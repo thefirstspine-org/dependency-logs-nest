@@ -16,6 +16,20 @@ export class LogsService {
     this.tfsLogsService = new TFSLogsService();
   }
   
+  /**
+   * Log an http message.
+   * @param message The message to log.
+   * @param data The data about the log (context for instance).
+   */
+  http(message: string, data?: any): void {
+    this.tfsLogsService.http(message, data);
+  }
+
+  /**
+   * Log a debug message.
+   * @param message The message to log.
+   * @param data The data about the log (context for instance).
+   */
   debug(message: string, data?: any): void {
     this.tfsLogsService.debug(message, data);
   }

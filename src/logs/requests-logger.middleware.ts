@@ -25,7 +25,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
       const { ip, method, path: url, params, query } = request;
       const userAgent = request.get('user-agent') || '';
 
-      RequestsLoggerMiddleware.logsService.debug(
+      RequestsLoggerMiddleware.logsService.http(
           `Request ${method} ${url}`,
           {
             userAgent,
@@ -40,7 +40,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
         const { statusCode } = response;
         const contentLength = response.get('content-length');
   
-        RequestsLoggerMiddleware.logsService.debug(
+        RequestsLoggerMiddleware.logsService.http(
           `Response to ${method} ${url}`,
           {
               statusCode,
@@ -49,7 +49,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
         );
       });
     } catch (e) {
-      RequestsLoggerMiddleware.logsService.error(
+      RequestsLoggerMiddleware.logsService.warning(
         `Error while logging request`,
         {
             error: e.getMessage(),
