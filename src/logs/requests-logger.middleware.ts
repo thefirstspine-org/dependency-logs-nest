@@ -1,4 +1,4 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { Injectable, NestMiddleware, HttpException } from '@nestjs/common';
 import { LogsService } from '@thefirstspine/logs';
 import { LogsService as TFSLogsService } from '@thefirstspine/logs';
 
@@ -7,7 +7,7 @@ import { Request, Response, NextFunction } from 'express';
 @Injectable()
 export class RequestsLoggerMiddleware implements NestMiddleware {
 
-  private static logsService: LogsService|undefined = undefined;
+  private static logsService: LogsService | undefined = undefined;
 
   constructor() {
   }
@@ -17,7 +17,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
   }
 
   public static use(request: Request, response: Response, next: NextFunction) {
-    if (RequestsLoggerMiddleware.logsService == undefined) {
+    if (!RequestsLoggerMiddleware.logsService) {
       RequestsLoggerMiddleware.logsService = new TFSLogsService();
     }
 
@@ -25,7 +25,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
       const { ip, method, path: url, params, query } = request;
       const userAgent = request.get('user-agent') || '';
 
-      RequestsLoggerMiddleware.logsService.http(
+      RequestsLoggerMiddleware?.logsService?.http(
           `Request ${method} ${url}`,
           {
             userAgent,
@@ -40,7 +40,7 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
         const { statusCode } = response;
         const contentLength = response.get('content-length');
   
-        RequestsLoggerMiddleware.logsService.http(
+        RequestsLoggerMiddleware?.logsService?.http(
           `Response to ${method} ${url}`,
           {
               statusCode,
@@ -48,11 +48,26 @@ export class RequestsLoggerMiddleware implements NestMiddleware {
           }
         );
       });
-    } catch (e) {
+    } catch (error: any) {
+      // If it's an HttpException, get the message
+      if (error instanceof HttpException) {
+        const response = error.getResponse();
+        // response can be a string or an object
+        const message =
+          typeof response === 'string' ? response : (response as any).message;
+        RequestsLoggerMiddleware.logsService.warning(
+          `Error while logging request`,
+          {
+              error: message,
+          }
+        );
+      }
+
+      // Fallback for unknown errors
       RequestsLoggerMiddleware.logsService.warning(
         `Error while logging request`,
         {
-            error: e.getMessage(),
+            error: error?.message || 'Unknown error',
         }
       );
     }
